@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.data.UserRepository
 import com.example.myapplication.di.Injection
+import com.example.myapplication.view.login.LoginViewModel
 import com.example.myapplication.view.main.MainViewModel
 import com.example.myapplication.viewmodel.UserViewModel
 
@@ -18,6 +19,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 UserViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
+                LoginViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
