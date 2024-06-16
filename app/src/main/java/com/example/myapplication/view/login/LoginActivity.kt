@@ -3,11 +3,13 @@ package com.example.myapplication.view.login
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myapplication.data.pref.UserModel
 import com.example.myapplication.databinding.ActivityLoginBinding
 import com.example.myapplication.view.main.MainActivity
 import com.example.storyapp.view.ViewModelFactory
@@ -44,14 +46,16 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-
+            showLoading(true)
             viewModel.login(email, password) { success, message ->
+                showLoading(false)
                 if (success) {
+                    viewModel.saveSession(UserModel(email, "sample_token"))
                     AlertDialog.Builder(this).apply {
                         setTitle("Yeah!")
                         setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
                         setPositiveButton("Lanjut") { _, _ ->
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            val intent = Intent(context, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
                             finish()
@@ -61,14 +65,18 @@ class LoginActivity : AppCompatActivity() {
                     }
                 } else {
                     AlertDialog.Builder(this).apply {
-                        setTitle("Login Gagal")
+                        setTitle("Error")
                         setMessage(message)
-                        setPositiveButton("Coba lagi", null)
+                        setPositiveButton("OK", null)
                         create()
                         show()
                     }
                 }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

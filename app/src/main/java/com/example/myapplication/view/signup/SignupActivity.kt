@@ -2,20 +2,21 @@ package com.example.myapplication.view.signup
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivitySignupBinding
-import com.example.myapplication.viewmodel.UserViewModel
+import com.example.myapplication.view.login.LoginViewModel
+import androidx.activity.viewModels
 import com.example.storyapp.view.ViewModelFactory
+import com.example.myapplication.data.pref.UserModel
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-    private val viewModel: UserViewModel by viewModels {
+    private val viewModel by viewModels<LoginViewModel> {
         ViewModelFactory.getInstance(this)
     }
 
@@ -53,7 +54,7 @@ class SignupActivity : AppCompatActivity() {
                 binding.nameEditTextLayout.error = null
             }
 
-            if (email.isEmpty() || !email.contains("@") || !email.contains(".")) {
+            if (email.isEmpty() ||!email.contains("@") ||!email.contains(".")) {
                 binding.emailEditTextLayout.error = getString(R.string.error_email)
             } else {
                 binding.emailEditTextLayout.error = null
@@ -65,21 +66,24 @@ class SignupActivity : AppCompatActivity() {
                 binding.passwordEditTextLayout.error = null
             }
 
-            if (name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && email.contains("@") && email.contains(".") && password.length >= 8) {
-                viewModel.register(name, email, password, {
-                    AlertDialog.Builder(this).apply {
-                        setTitle("Yeah!")
-                        setMessage("Akun dengan $email sudah jadi nih.")
-                        setPositiveButton("Lanjut") { _, _ ->
-                            finish()
-                        }
-                        create()
-                        show()
+            if (!name.isEmpty() &&!email.isEmpty() &&!password.isEmpty() && email.contains("@") && email.contains(".") && password.length >= 8) {
+                showLoading(true)
+                viewModel.saveSession(UserModel(email, "sample_token"))
+                AlertDialog.Builder(this).apply {
+                    setTitle("Yeah!")
+                    setMessage("Akun dengan $email sudah jadi nih.")
+                    setPositiveButton("Lanjut") { _, _ ->
+                        showLoading(false)
+                        finish()
                     }
-                }, {
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-                })
+                    create()
+                    show()
+                }
             }
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

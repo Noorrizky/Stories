@@ -2,8 +2,11 @@ package com.example.myapplication.data.retrofit
 
 import com.example.myapplication.data.response.LoginResponse
 import com.example.myapplication.data.response.RegisterResponse
+import com.example.myapplication.data.response.StoryResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
@@ -22,4 +25,9 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): LoginResponse
+
+    @GET("stories")
+    suspend fun getStories(
+        @Header("Authorization") token: String,
+    ): StoryResponse
 }
