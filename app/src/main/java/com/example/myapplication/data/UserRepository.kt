@@ -4,6 +4,7 @@ import com.example.myapplication.data.pref.UserModel
 import com.example.myapplication.data.pref.UserPreference
 import com.example.myapplication.data.response.LoginResponse
 import com.example.myapplication.data.response.RegisterResponse
+import com.example.myapplication.data.response.StoryResponse
 import com.example.myapplication.data.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
 
@@ -39,6 +40,10 @@ class UserRepository private constructor(
             saveSession(user)
         }
         return response
+    }
+
+    suspend fun getStories(token: String): StoryResponse {
+        return apiService.getStories(token)
     }
 
     companion object {

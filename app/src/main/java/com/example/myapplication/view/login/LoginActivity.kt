@@ -11,8 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.data.pref.UserModel
 import com.example.myapplication.databinding.ActivityLoginBinding
+import com.example.myapplication.view.ViewModelFactory
 import com.example.myapplication.view.main.MainActivity
-import com.example.storyapp.view.ViewModelFactory
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
