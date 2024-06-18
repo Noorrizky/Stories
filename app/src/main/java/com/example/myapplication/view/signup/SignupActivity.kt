@@ -11,8 +11,8 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivitySignupBinding
 import com.example.myapplication.view.login.LoginViewModel
 import androidx.activity.viewModels
-import com.example.storyapp.view.ViewModelFactory
 import com.example.myapplication.data.pref.UserModel
+import com.example.myapplication.view.ViewModelFactory
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
