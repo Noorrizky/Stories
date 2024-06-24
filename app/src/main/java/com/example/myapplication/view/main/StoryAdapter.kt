@@ -29,6 +29,7 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DI
                 .load(story.photoUrl)
                 .into(binding.ivItemPhoto)
 
+
             itemView.setOnClickListener {
                 // Implementasi untuk membuka detail activity
             }
