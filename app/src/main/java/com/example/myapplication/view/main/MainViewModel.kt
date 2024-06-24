@@ -9,6 +9,8 @@ import com.example.myapplication.data.response.ListStoryItem
 import kotlinx.coroutines.launch
 import androidx.lifecycle.asLiveData
 import com.example.myapplication.data.pref.UserModel
+import com.example.myapplication.di.ResultState
+import kotlinx.coroutines.flow.first
 
 class MainViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _stories = MutableLiveData<List<ListStoryItem>>()
@@ -26,11 +28,14 @@ class MainViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun getStories(token: String) {
         viewModelScope.launch {
-            try {
-                val response = userRepository.getStories(token)
-                _stories.value = response.listStory as List<ListStoryItem>?
-            } catch (e: Exception) {
-                e.printStackTrace()
+            when (val result = userRepository.getStories().first()) {
+                is ResultState.Success -> {
+                    _stories.value = result.data
+                }
+
+                else -> {
+
+                }
             }
         }
     }

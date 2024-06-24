@@ -2,11 +2,16 @@ package com.example.myapplication.data
 
 import com.example.myapplication.data.pref.UserModel
 import com.example.myapplication.data.pref.UserPreference
+import com.example.myapplication.data.response.ListStoryItem
 import com.example.myapplication.data.response.LoginResponse
 import com.example.myapplication.data.response.RegisterResponse
 import com.example.myapplication.data.response.StoryResponse
 import com.example.myapplication.data.retrofit.ApiService
+import com.example.myapplication.di.ResultState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -25,26 +30,40 @@ class UserRepository private constructor(
         userPreference.logout()
     }
 
-    suspend fun register(name: String, email: String, password: String): RegisterResponse {
-        return apiService.register(name, email, password)
-    }
-
-    suspend fun login(email: String, password: String): LoginResponse {
-        val response = apiService.login(email, password)
-        if (!response.error) {
-            val user = UserModel(
-                email = email,
-                token = response.loginResult.token,
-                isLogin = true
-            )
-            saveSession(user)
+    fun register(
+        name: String,
+        email: String,
+        password: String,
+    ): Flow<ResultState<RegisterResponse>> = flow {
+        try {
+            val response = apiService.register(name, email, password)
+            emit(ResultState.Success(response))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(ResultState.Error(e.message ?: "An error occurred"))
         }
-        return response
-    }
+    }.flowOn(Dispatchers.IO)
 
-    suspend fun getStories(token: String): StoryResponse {
-        return apiService.getStories()
-    }
+    fun login(email: String, password: String): Flow<ResultState<LoginResponse>> = flow {
+        emit(ResultState.Loading)
+        try {
+            val response = apiService.login(email, password)
+            emit(ResultState.Success(response))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(ResultState.Error(e.message ?: "An error occurred"))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    suspend fun getStories(): Flow<ResultState<List<ListStoryItem>>> = flow {
+        try {
+            val response = apiService.getStories()
+            val listStory = response.listStory?.filterNotNull() ?: emptyList()
+            emit(ResultState.Success(listStory))
+        } catch (e: Exception) {
+            emit(ResultState.Error(e.message ?: "An error occurred"))
+        }
+    }.flowOn(Dispatchers.IO)
 
     companion object {
         @Volatile

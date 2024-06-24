@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.UserRepository
 import com.example.myapplication.data.pref.UserModel
+import com.example.myapplication.di.ResultState
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     fun saveSession(user: UserModel) {
@@ -16,18 +17,25 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun login(email: String, password: String, onResult: (Boolean, String) -> Unit) {
         viewModelScope.launch {
-            try {
-                val response = repository.login(email, password)
-                if (!response.error) {
-                    val user = UserModel(email, response.loginResult.token, true)
-                    saveSession(user)
-                    onResult(true, response.message)
-                } else {
-                    onResult(false, response.message)
+            repository.login(email, password).collect { result ->
+                when (result) {
+                    is ResultState.Success -> {
+                        val response = result.data
+                        if (!response.error) {
+                            val user = UserModel(email, response.loginResult.token, true)
+                            saveSession(user)
+                            onResult(true, response.message)
+                        } else {
+                            onResult(false, response.message)
+                        }
+                    }
+                    is ResultState.Error -> {
+                        onResult(false, result.error)
+                    }
+                    is ResultState.Loading -> {
+
+                    }
                 }
-            } catch (e: HttpException) {
-                val errorMessage = e.response()?.errorBody()?.string()
-                onResult(false, errorMessage ?: "An error occurred")
             }
         }
     }
