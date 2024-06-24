@@ -23,12 +23,12 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DI
     class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             binding.tvItemName.text = story.name
+            binding.tvItemDate.text = story.createdAt
             binding.tvItemDescription.text = story.description
             Glide.with(itemView.context)
                 .load(story.photoUrl)
                 .into(binding.ivItemPhoto)
 
-            // Placeholder untuk klik item - akan digunakan nanti untuk detail activity
             itemView.setOnClickListener {
                 // Implementasi untuk membuka detail activity
             }

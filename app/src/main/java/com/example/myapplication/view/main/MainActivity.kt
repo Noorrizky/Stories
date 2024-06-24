@@ -11,8 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.StoryAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.view.ViewModelFactory
 import com.example.myapplication.view.welcome.WelcomeActivity
+import com.example.myapplication.view.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
             } else {
-                viewModel.getStories("Bearer ${user.token}")
+                viewModel.getStories(user.token)
             }
         })
 

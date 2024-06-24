@@ -7,12 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.UserRepository
 import com.example.myapplication.data.response.ListStoryItem
 import kotlinx.coroutines.launch
+import androidx.lifecycle.asLiveData
+import com.example.myapplication.data.pref.UserModel
 
 class MainViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _stories = MutableLiveData<List<ListStoryItem>>()
     val stories: LiveData<List<ListStoryItem>> = _stories
 
-    fun getSession() = userRepository.getSession()
+    fun getSession(): LiveData<UserModel> {
+        return userRepository.getSession().asLiveData()
+    }
 
     fun logout() {
         viewModelScope.launch {
@@ -22,8 +26,12 @@ class MainViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     fun getStories(token: String) {
         viewModelScope.launch {
-            val response = userRepository.getStories(token)
-            _stories.value = response.listStory?.filterNotNull()
+            try {
+                val response = userRepository.getStories(token)
+                _stories.value = response.listStory as List<ListStoryItem>?
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }
