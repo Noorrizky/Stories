@@ -50,7 +50,6 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(email, password) { success, message ->
                 showLoading(false)
                 if (success) {
-                    viewModel.saveSession(UserModel(email, "sample_token"))
                     AlertDialog.Builder(this).apply {
                         setTitle("Yeah!")
                         setMessage("Anda berhasil login. Sudah tidak sabar untuk belajar ya?")
