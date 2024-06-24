@@ -7,8 +7,6 @@ import com.example.myapplication.data.response.RegisterResponse
 import com.example.myapplication.data.response.StoryResponse
 import com.example.myapplication.data.retrofit.ApiService
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -45,7 +43,7 @@ class UserRepository private constructor(
     }
 
     suspend fun getStories(token: String): StoryResponse {
-        return apiService.getStories("Bearer $token")
+        return apiService.getStories()
     }
 
     companion object {
