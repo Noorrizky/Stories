@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.data.response.ListStoryItem
 import com.example.myapplication.databinding.ItemStoryBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
@@ -23,15 +26,25 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DI
     class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
             binding.tvItemName.text = story.name
-            binding.tvItemDate.text = story.createdAt
+            binding.tvItemDate.text = story.createdAt?.let { formatDate(it) }
             binding.tvItemDescription.text = story.description
             Glide.with(itemView.context)
                 .load(story.photoUrl)
                 .into(binding.ivItemPhoto)
 
-
             itemView.setOnClickListener {
                 // Implementasi untuk membuka detail activity
+            }
+        }
+
+        private fun formatDate(dateString: String): String {
+            return try {
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val date: Date? = inputFormat.parse(dateString)
+                date?.let { outputFormat.format(it) } ?: dateString
+            } catch (e: Exception) {
+                dateString
             }
         }
     }

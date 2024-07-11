@@ -17,7 +17,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 when (result) {
                     is ResultState.Success -> onSuccess(result.data)
                     is ResultState.Error -> onError(result.error)
-                    is ResultState.Loading -> { /* Handle loading state if needed */ }
+                    is ResultState.Loading -> {}
                 }
             }
         }
@@ -29,7 +29,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 when (result) {
                     is ResultState.Success -> onSuccess(result.data)
                     is ResultState.Error -> onError(result.error)
-                    is ResultState.Loading -> { /* Handle loading state if needed */ }
+                    is ResultState.Loading -> {}
                 }
             }
         }
