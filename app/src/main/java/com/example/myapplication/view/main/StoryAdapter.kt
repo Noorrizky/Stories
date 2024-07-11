@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.data.response.ListStoryItem
 import com.example.myapplication.databinding.ItemStoryBinding
+import com.example.myapplication.view.detail.DetailActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -33,7 +35,13 @@ class StoryAdapter : ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DI
                 .into(binding.ivItemPhoto)
 
             itemView.setOnClickListener {
-                // Implementasi untuk membuka detail activity
+                val intent = Intent(itemView.context, DetailActivity::class.java).apply {
+                    putExtra(DetailActivity.EXTRA_NAME, story.name)
+                    putExtra(DetailActivity.EXTRA_DATE, story.createdAt?.let { formatDate(it) })
+                    putExtra(DetailActivity.EXTRA_DESCRIPTION, story.description)
+                    putExtra(DetailActivity.EXTRA_PHOTO_URL, story.photoUrl)
+                }
+                itemView.context.startActivity(intent)
             }
         }
 
