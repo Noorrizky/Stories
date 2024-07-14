@@ -7,7 +7,6 @@ Welcome to the Stories repository! This project is an Android application that u
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 - Display stories in a RecyclerView.
