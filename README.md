@@ -43,7 +43,7 @@ Welcome to the Stories repository! This project is an Android application that u
     - Click on the green play button in the menu bar.
     - Select your connected device or emulator.
 
-## Usage
+## Usage //TODO
 After cloning and setting up the project, you can start adding stories, view them in the RecyclerView, and see images loaded efficiently with Glide.
 
 ## Contributing
