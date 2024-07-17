@@ -8,6 +8,7 @@ import com.example.myapplication.di.Injection
 import com.example.myapplication.view.login.LoginViewModel
 import com.example.myapplication.view.main.MainViewModel
 import com.example.myapplication.viewmodel.UserViewModel
+import com.example.myapplication.view.signup.SignUpViewModel
 
 class ViewModelFactory(private val repository: UserRepository) : ViewModelProvider.NewInstanceFactory() {
 
@@ -23,6 +24,9 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
             modelClass.isAssignableFrom(LoginViewModel::class.java) -> {
                 LoginViewModel(repository) as T
             }
+            modelClass.isAssignableFrom(SignUpViewModel::class.java) -> {
+                SignUpViewModel(repository) as T
+            }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }
     }
@@ -30,6 +34,7 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
     companion object {
         @Volatile
         private var INSTANCE: ViewModelFactory? = null
+
         @JvmStatic
         fun getInstance(context: Context): ViewModelFactory {
             return INSTANCE ?: synchronized(this) {

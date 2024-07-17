@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.getSession().observe(this, Observer { user ->
-            Log.d("token", user.token)
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
                 finish()
@@ -47,10 +46,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
+            @Suppress("DEPRECATION")
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
@@ -83,4 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
         builder.create().show()
     }
+
+
 }
+

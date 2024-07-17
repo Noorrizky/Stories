@@ -13,6 +13,7 @@ import com.example.myapplication.data.pref.UserModel
 import com.example.myapplication.databinding.ActivityLoginBinding
 import com.example.myapplication.view.ViewModelFactory
 import com.example.myapplication.view.main.MainActivity
+import com.example.myapplication.view.signup.SignupActivity
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
@@ -27,6 +28,10 @@ class LoginActivity : AppCompatActivity() {
 
         setupView()
         setupAction()
+
+        binding.signupButton.setOnClickListener {
+            startActivity(Intent(this, SignupActivity::class.java))
+        }
     }
 
     private fun setupView() {
@@ -63,13 +68,7 @@ class LoginActivity : AppCompatActivity() {
                         show()
                     }
                 } else {
-                    AlertDialog.Builder(this).apply {
-                        setTitle("Error")
-                        setMessage(message)
-                        setPositiveButton("OK", null)
-                        create()
-                        show()
-                    }
+                    showErrorDialog(message)
                 }
             }
         }
@@ -78,4 +77,15 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
+
+    private fun showErrorDialog(message: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle("Login Failed")
+            setMessage(message)
+            setPositiveButton("OK", null)
+            create()
+            show()
+        }
+    }
 }
+
